@@ -27,6 +27,7 @@ ENV CHROME_BIN=/usr/bin/chromium-browser \
 
 RUN mkdir -p /usr/share/fonts/win
 COPY ./ttf /usr/share/fonts/win
+
 # 安装 Chromium 和其他依赖项
 RUN apk add --no-cache \
       chromium \
