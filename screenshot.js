@@ -45,7 +45,7 @@ const handler = async (targetUrl) => {
                 resolve();
             });
         });
-
+        
         const screenshotBuffer = await page.screenshot();
         const base64Screenshot = screenshotBuffer.toString('base64');
         return { image: base64Screenshot };

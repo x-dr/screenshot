@@ -1,7 +1,22 @@
+# 第一阶段：构建依赖项
+FROM node:lts-alpine as builder
+
+WORKDIR /app
+COPY package.json ./
+RUN yarn install --frozen-lockfile
+
+# 第二阶段：复制构建结果并运行应用程序
 FROM node:lts-alpine
 
 
-# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
+
+WORKDIR /app
+
+# 从第一阶段复制依赖项
+COPY --from=builder /app/node_modules ./node_modules
+COPY . .
+
+# 设置环境变量
 ENV CHROME_BIN=/usr/bin/chromium-browser \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     LANG=zh_CN.UTF-8 \
@@ -10,38 +25,29 @@ ENV CHROME_BIN=/usr/bin/chromium-browser \
     TZ=Asia/Shanghai \
     PORT=8080
 
-
-# Create app directory
-ADD . /app/
-WORKDIR /app
-
-# Installs latest Chromium (100) package.
-RUN  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
-      apk update && \
-      apk add --no-cache \
+RUN mkdir -p /usr/share/fonts/win
+COPY ./ttf /usr/share/fonts/win
+# 安装 Chromium 和其他依赖项
+RUN apk add --no-cache \
       chromium \
       nss \
       freetype \
       harfbuzz \
       ca-certificates \
-      ttf-freefont  \
-      ttf-dejavu wqy-zenhei \
+      font-adobe-100dpi \
       dbus \
       && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
       && echo "Asia/Shanghai" > /etc/timezone \
       && rm -rf /var/cache/apk/* \
       && rm -rf /tmp/* \
       && rm -rf /var/tmp/* \
-      && yarn 
-
-      
- 
-
-
+      && chmod 777 /usr/share/fonts/win/* \
+      && fc-cache -fv \
+      && fc-list 
 
 
 
 
 EXPOSE 8080
-
+ 
 CMD [ "npm", "run", "dev"]

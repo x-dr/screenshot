@@ -19,7 +19,7 @@ router.get('/', async (ctx) => {
 
 // 使用路由中间件
 app.use(router.routes()).use(router.allowedMethods());
-
-app.listen(7802, '0.0.0.0', () => {
-    console.log('Server is running on port 7802');
+const port = process.env.PORT || 7802;
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running at http://127.0.0.1:${port}`);
 });
