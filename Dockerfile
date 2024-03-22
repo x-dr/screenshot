@@ -2,7 +2,7 @@
 FROM node:lts-alpine as builder
 
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json  ./
 RUN yarn install --frozen-lockfile --production
 
 # 第二阶段：运行应用程序
