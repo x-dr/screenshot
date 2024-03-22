@@ -1,8 +1,10 @@
-import puppeteer from "puppeteer";
-import { KnownDevices } from 'puppeteer';
-import chromium from "chrome-aws-lambda";
+import puppeteer from "puppeteer-core";
+import { KnownDevices } from 'puppeteer-core';
+import chromium from "@sparticuz/chromium";
 import path from 'path';
 const __dirname = path.resolve();
+
+
 const handler = async (targetUrl, isMobile, xy) => {
 
     if (!targetUrl) {
@@ -21,12 +23,23 @@ const handler = async (targetUrl, isMobile, xy) => {
 
     let browser = null;
     try {
-        
+        // Optional: If you'd like to use the new headless mode. "shell" is the default.
+        // NOTE: Because we build the shell binary, this option does not work.
+        //       However, this option will stay so when we migrate to full chromium it will work.
+        chromium.setHeadlessMode = true;
+
+        // Optional: If you'd like to disable webgl, true is the default.
+        chromium.setGraphicsMode = false;
+
+        // Optional: Load any fonts you need. Open Sans is included by default in AWS Lambda instances
+        await chromium.font(
+            "https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf"
+        );
         browser = await puppeteer.launch({
-            args: [...chromium.args, '--no-sandbox',"--lang=zh_CN.UTF-8"], // Add --no-sandbox flag
-            defaultViewport: { width: 1920, height: 1080 },
-            executablePath: process.env.CHROME_BIN || await chromium.executablePath,
-            headless: true,
+            args: [...chromium.args, '--no-sandbox'], // Add --no-sandbox flag
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--disable-extensions'],
         });

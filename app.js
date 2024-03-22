@@ -9,12 +9,14 @@ const app = new Koa();
 const router = new Router();
 app.use(bodyParser());
 
-router.all('/iurl', getImg)
-
-
 router.get('/', async (ctx) => {
     ctx.body = 'ban';
 });
+
+router.all('/iurl', getImg); // 此处传递正确导入的 getImg 函数
+
+
+
 
 
 // 使用路由中间件
