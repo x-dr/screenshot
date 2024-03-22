@@ -25,7 +25,7 @@ const handler = async (targetUrl, isMobile, xy) => {
         browser = await puppeteer.launch({
             args: [...chromium.args, '--no-sandbox',"--lang=zh_CN.UTF-8"], // Add --no-sandbox flag
             defaultViewport: { width: 1920, height: 1080 },
-            executablePath: process.env.CHROME_BIN || "/usr/bin/chromium",
+            executablePath: process.env.CHROME_BIN || await chromium.executablePath,
             headless: true,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--disable-extensions'],
