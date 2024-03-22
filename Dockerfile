@@ -2,13 +2,11 @@
 FROM node:lts-alpine as builder
 
 WORKDIR /app
-COPY package.json ./
-RUN yarn install --frozen-lockfile
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production
 
-# 第二阶段：复制构建结果并运行应用程序
+# 第二阶段：运行应用程序
 FROM node:lts-alpine
-
-
 
 WORKDIR /app
 
@@ -21,14 +19,11 @@ ENV CHROME_BIN=/usr/bin/chromium-browser \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     LANG=zh_CN.UTF-8 \
     LANGUAGE=zh_CN.UTF-8 \
-    LC_ALL=zh_CN.UTF-8  \
+    LC_ALL=zh_CN.UTF-8 \
     TZ=Asia/Shanghai \
     PORT=8080
 
-RUN mkdir -p /usr/share/fonts/win
-COPY ./ttf /usr/share/fonts/win
-
-# 安装 Chromium 和其他依赖项
+# 安装必要的依赖项和清理不需要的文件
 RUN apk add --no-cache \
       chromium \
       nss \
@@ -44,11 +39,8 @@ RUN apk add --no-cache \
       && rm -rf /var/tmp/* \
       && chmod 777 /usr/share/fonts/win/* \
       && fc-cache -fv \
-      && fc-list 
+      && fc-list
 
-
-
-
+# 暴露端口并运行应用程序
 EXPOSE 8080
- 
-CMD [ "npm", "run", "dev"]
+CMD [ "npm", "run", "start" ]

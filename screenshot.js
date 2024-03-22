@@ -1,8 +1,5 @@
 import puppeteer from "puppeteer";
 import { KnownDevices } from 'puppeteer';
-import chromium from "@sparticuz/chromium";
-import path from 'path';
-const __dirname = path.resolve();
 const handler = async (targetUrl, isMobile, xy) => {
 
     if (!targetUrl) {
@@ -22,10 +19,11 @@ const handler = async (targetUrl, isMobile, xy) => {
     let browser = null;
     try {
         
+
         browser = await puppeteer.launch({
-            args: ['--no-sandbox',"--lang=zh_CN.UTF-8"], // Add --no-sandbox flag
-            defaultViewport: { width: 1920, height: 1080 },
-            executablePath: "/usr/bin/chromium" || await chromium.executablePath,
+            args: ['--no-sandbox', "--lang=zh_CN.UTF-8"], // Add --no-sandbox flag
+            defaultViewport: {width: 1920, height: 1080 },
+            executablePath: process.env.CHROME_BIN || "/usr/bin/chromium",
             headless: true,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--disable-extensions'],
@@ -49,7 +47,7 @@ const handler = async (targetUrl, isMobile, xy) => {
 
         page.setDefaultNavigationTimeout(80000);
         await page.goto(targetUrl, {
-            waitUntil: 'load',
+            waitUntil: 'networkidle0',
         });
 
         await page.evaluate(() => {
