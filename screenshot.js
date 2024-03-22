@@ -86,7 +86,7 @@ const getImg = async (ctx) => {
         const data = await handler(url, isMobile, xy);
         ctx.status = 200;
         ctx.response.set('Content-Type', 'image/png'); // 设置内容类型为图片类型
-        ctx.response.set('Content-Disposition', 'attachment; filename="screenshot.png"'); // 设置文件名
+        // ctx.response.set('Content-Disposition', 'attachment; filename="screenshot.png"'); // 设置文件名
         ctx.response.set('Cache-Control', 'max-age=60'); // 设置缓存时间
         ctx.body = Buffer.from(data.image, 'base64'); // 将 base64 编码的图片数据转换为 buffer
     } catch (e) {
