@@ -1,10 +1,8 @@
-import puppeteer from "puppeteer-core";
-import { KnownDevices } from 'puppeteer-core';
+import puppeteer from "puppeteer";
+import { KnownDevices } from 'puppeteer';
 import chromium from "@sparticuz/chromium";
 import path from 'path';
 const __dirname = path.resolve();
-
-
 const handler = async (targetUrl, isMobile, xy) => {
 
     if (!targetUrl) {
@@ -23,16 +21,12 @@ const handler = async (targetUrl, isMobile, xy) => {
 
     let browser = null;
     try {
-        // Optional: If you'd like to use the new headless mode. "shell" is the default.
-        // NOTE: Because we build the shell binary, this option does not work.
-        //       However, this option will stay so when we migrate to full chromium it will work.
-        chromium.setHeadlessMode = true;
-
+        
         browser = await puppeteer.launch({
-            args: [...chromium.args, '--no-sandbox'], // Add --no-sandbox flag
-            defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath(),
-            headless: chromium.headless,
+            args: ['--no-sandbox',"--lang=zh_CN.UTF-8"], // Add --no-sandbox flag
+            defaultViewport: { width: 1920, height: 1080 },
+            executablePath: "/usr/bin/chromium" || await chromium.executablePath,
+            headless: true,
             ignoreHTTPSErrors: true,
             ignoreDefaultArgs: ['--disable-extensions'],
         });
@@ -55,7 +49,7 @@ const handler = async (targetUrl, isMobile, xy) => {
 
         page.setDefaultNavigationTimeout(80000);
         await page.goto(targetUrl, {
-            waitUntil: 'networkidle0',
+            waitUntil: 'load',
         });
 
         await page.evaluate(() => {

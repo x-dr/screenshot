@@ -13,10 +13,11 @@
   "license": "ISC",
   "dependencies": {
     "@sparticuz/chromium": "^123.0.0",
+    "chrome-aws-lambda": "^10.1.0",
     "koa": "^2.15.2",
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^12.0.1",
-    "puppeteer-core": "^22.6.0"
+    "puppeteer": "^22.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
