@@ -15,9 +15,7 @@ router.get('/', async (ctx) => {
 
 router.all('/iurl', getImg); // 此处传递正确导入的 getImg 函数
 
-router.get('/a',async (ctx)=>{
-    ctx.body = process.env;
-})
+
 
 
 
