@@ -28,13 +28,6 @@ const handler = async (targetUrl, isMobile, xy) => {
         //       However, this option will stay so when we migrate to full chromium it will work.
         chromium.setHeadlessMode = true;
 
-        // Optional: If you'd like to disable webgl, true is the default.
-        chromium.setGraphicsMode = false;
-
-        // Optional: Load any fonts you need. Open Sans is included by default in AWS Lambda instances
-        await chromium.font(
-            "https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf"
-        );
         browser = await puppeteer.launch({
             args: [...chromium.args, '--no-sandbox'], // Add --no-sandbox flag
             defaultViewport: chromium.defaultViewport,
