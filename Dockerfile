@@ -23,6 +23,9 @@ ENV CHROME_BIN=/usr/bin/chromium-browser \
     TZ=Asia/Shanghai \
     PORT=8080
 
+RUN mkdir -p /usr/share/fonts/win
+COPY ./ttf /usr/share/fonts/win
+
 # 安装必要的依赖项和清理不需要的文件
 RUN apk add --no-cache \
       chromium \
@@ -38,6 +41,7 @@ RUN apk add --no-cache \
       && rm -rf /tmp/* \
       && rm -rf /var/tmp/* \
       && chmod 777 /usr/share/fonts/win/* \
+      && rm -rf .ttf \
       && fc-cache -fv \
       && fc-list
 
